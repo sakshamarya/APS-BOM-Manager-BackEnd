@@ -13,8 +13,6 @@ app.use(
     })
 )
 
-console.log(process.env.MONGODB_USERNAME);
-
 app.use(express.json())
 app.use(cors());
 
@@ -30,8 +28,6 @@ async function mongodbConnect(){
         await client.connect();
         console.log("successfully connected to the database.");
 
-        // retrieveDocuments();
-
     } catch (error) {
         console.log("error in connecting to mongodb " + error);
     }
@@ -40,6 +36,17 @@ mongodbConnect();
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
+})
+
+app.post('/addPO', (req, res)=>{
+    console.log(req.body);
+    
+    try {
+        client.db("aps-database").collection("purchaseOrder").insertOne(req.body);
+        res.sendStatus(200);
+    } catch (error) {
+        res.send(error);
+    }
 })
 
 app.listen(port, () => {
