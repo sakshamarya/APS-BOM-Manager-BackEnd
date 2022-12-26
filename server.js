@@ -49,6 +49,28 @@ app.post('/addPO', (req, res)=>{
     }
 })
 
+app.get('/getInventory', async(req, res)=>{
+    try {
+        const inventoryArray = await client.db("aps-database").collection("inventory").find().toArray();
+        console.log(inventoryArray);
+        res.send(inventoryArray);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
+app.post('/updateInventory', (req, res)=>{
+    console.log(req.body);
+    
+    try {
+        client.db("aps-database").collection("inventory").deleteMany();
+        client.db("aps-database").collection("inventory").insertMany(req.body);
+        res.sendStatus(200);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
