@@ -305,6 +305,16 @@ app.post('/addHistoryPO', (req, res)=>{
     }
 })
 
+app.get('/getHistory', async(req, res)=>{
+    try {
+        const history = await client.db("aps-database").collection("history").find().toArray();
+        console.log(history);
+        res.send(history);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
