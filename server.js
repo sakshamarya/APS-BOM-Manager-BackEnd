@@ -246,8 +246,6 @@ app.get('/', (req, res) => {
 })
 
 app.post('/addPO', (req, res)=>{
-    console.log(req.body);
-    
     try {
         client.db("aps-database").collection("purchaseOrder").insertOne(req.body);
         res.sendStatus(200);
@@ -259,21 +257,28 @@ app.post('/addPO', (req, res)=>{
 app.get('/getInventory', async(req, res)=>{
     try {
         const inventoryArray = await client.db("aps-database").collection("inventory").find().toArray();
-        console.log(inventoryArray);
         res.send(inventoryArray);
     } catch (error) {
         res.send(error);
     }
 })
 
-app.post('/updateInventory', (req, res)=>{
-    try {
-        client.db("aps-database").collection("inventory").deleteMany();
-        client.db("aps-database").collection("inventory").insertMany(req.body);
-        res.sendStatus(200);
-    } catch (error) {
-        res.send(error);
+app.post('/updateInventory', async (req, res)=>{
+    
+    for(let i=0;i<req.body.length;i++){
+        const id = new mongodb.ObjectId(req.body[i]._id);
+        try {
+            const result = await client.db('aps-database').collection('inventory').updateOne({_id: id},{
+                $set : {
+                    qty: req.body[i].qty
+                }
+            })
+        } catch (error) {
+            res.send(error);
+        }
     }
+
+    res.sendStatus(200);
 })
 
 app.get('/getPendingPO', async(req, res)=>{
@@ -287,7 +292,6 @@ app.get('/getPendingPO', async(req, res)=>{
 
 app.post('/deletePendingPO', (req,res)=>{
     const idToRemove = new mongodb.ObjectId(req.body._id);
-    console.log("removing", typeof idToRemove);
     try {
         client.db("aps-database").collection("purchaseOrder").deleteOne( {_id: idToRemove});;
         res.sendStatus(200);
@@ -308,7 +312,6 @@ app.post('/addHistoryPO', (req, res)=>{
 app.get('/getHistory', async(req, res)=>{
     try {
         const history = await client.db("aps-database").collection("history").find().toArray();
-        console.log(history);
         res.send(history);
     } catch (error) {
         res.send(error);
