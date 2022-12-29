@@ -264,7 +264,7 @@ app.get('/getInventory', async(req, res)=>{
 })
 
 app.post('/updateInventory', async (req, res)=>{
-    
+
     for(let i=0;i<req.body.length;i++){
         const id = new mongodb.ObjectId(req.body[i]._id);
         try {
