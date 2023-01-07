@@ -287,11 +287,10 @@ app.post('/addToInventory', async (req, res)=>{
 
     try {
         const result = await client.db('aps-database').collection('inventory').insertOne(req.body);
+        res.sendStatus(200);
     } catch (error) {
         res.send(error);
     }
-    
-    res.sendStatus(200);
 })
 
 app.get('/getPendingPO', async(req, res)=>{
