@@ -281,6 +281,19 @@ app.post('/updateInventory', async (req, res)=>{
     res.sendStatus(200);
 })
 
+app.post('/addToInventory', async (req, res)=>{
+
+    const result = await client.db('aps-database').collection('inventory').insertOne(req.body);
+
+    try {
+        const result = await client.db('aps-database').collection('inventory').insertOne(req.body);
+    } catch (error) {
+        res.send(error);
+    }
+    
+    res.sendStatus(200);
+})
+
 app.get('/getPendingPO', async(req, res)=>{
     try {
         const PO = await client.db("aps-database").collection("purchaseOrder").find().toArray();
