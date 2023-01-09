@@ -276,6 +276,15 @@ app.post('/addSearchHistory', (req, res)=>{
     }
 })
 
+app.get('/getSearchHistory', async(req, res)=>{
+    try {
+        const history = await client.db("aps-database").collection("searchHistory").find().toArray();
+        res.send(history);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.get('/getInventory', async(req, res)=>{
     try {
         const inventoryArray = await client.db("aps-database").collection("inventory").find().toArray();
