@@ -256,14 +256,20 @@ app.post('/addPO', (req, res)=>{
 
 app.post('/addSearchHistory', (req, res)=>{
     try {
+
+        let data=[];
         for(let i=0;i<req.body.length;i++){
-            let data = {
+            let tempObject = {
                 name: req.body[i].itemDescription,
                 bom: req.body[i].bom
             }
-            client.db("aps-database").collection("searchHistory").insertOne(data);
+
+            if(tempObject.name.length>0){
+                data.push(tempObject);
+            }
+            
         }
-        
+        client.db("aps-database").collection("searchHistory").insertMany(data);
         res.sendStatus(200);
     } catch (error) {
         res.send(error);
