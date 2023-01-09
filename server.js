@@ -254,6 +254,22 @@ app.post('/addPO', (req, res)=>{
     }
 })
 
+app.post('/addSearchHistory', (req, res)=>{
+    try {
+        for(let i=0;i<req.body.length;i++){
+            let data = {
+                name: req.body[i].itemDescription,
+                bom: req.body[i].bom
+            }
+            client.db("aps-database").collection("searchHistory").insertOne(data);
+        }
+        
+        res.sendStatus(200);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.get('/getInventory', async(req, res)=>{
     try {
         const inventoryArray = await client.db("aps-database").collection("inventory").find().toArray();
