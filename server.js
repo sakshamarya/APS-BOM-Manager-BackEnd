@@ -282,7 +282,12 @@ app.post('/addSearchHistory', async(req, res)=>{
             }
             
         }
-        client.db("aps-database").collection("searchHistory").insertMany(data);
+        try {
+            const result = await client.db("aps-database").collection("searchHistory").insertMany(data);
+        } catch (error) {
+            res.send(error);
+        }
+        
         res.sendStatus(200);
     } catch (error) {
         res.send(error);
