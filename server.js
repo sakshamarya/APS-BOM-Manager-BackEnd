@@ -255,43 +255,37 @@ app.post('/addPO', (req, res)=>{
 })
 
 app.post('/addSearchHistory', async(req, res)=>{
-    try {
+    let data=[];
 
-        let data=[];
-        for(let i=0;i<req.body.length;i++){
-            let tempObject = {
-                name: req.body[i].itemDescription,
-                bom: req.body[i].bom
-            }
+    for(let i=0;i<req.body.length;i++){
+        if(tempObject.name.length>0){
+            try {
+                const data = await client.db("aps-database").collection("searchHistory").findOne({name: req.body[i].itemDescription});
 
-
-            if(tempObject.name.length>0){
-                try {
-                    const data = await client.db("aps-database").collection("searchHistory").findOne({name: tempObject.name});
-    
-                    if(data){
-                        console.log("Item exists");
-                    }
-                    else{
-                        console.log("Item not exists");
-                        data.push(tempObject);
-                    }
-                } catch (error) {
-                    console.log(error);
+                if(data){
+                    console.log("Item exists", req.body[i].itemDescription);
                 }
+                else{
+                    console.log("Item not exists", req.body[i].itemDescription);
+                    data.push({
+                        name: req.body[i].itemDescription,
+                        bom: req.body[i].bom
+                    });
+                }
+            } catch (error) {
+                console.log(error);
             }
-            
         }
-        try {
-            const result = await client.db("aps-database").collection("searchHistory").insertMany(data);
-        } catch (error) {
-            res.send(error);
-        }
-        
+    }
+    
+    try {
+        const result = await client.db("aps-database").collection("searchHistory").insertMany(data);
         res.sendStatus(200);
     } catch (error) {
         res.send(error);
     }
+    
+
 })
 
 app.get('/getSearchHistory', async(req, res)=>{
