@@ -258,7 +258,7 @@ app.post('/addSearchHistory', async(req, res)=>{
     let data=[];
 
     for(let i=0;i<req.body.length;i++){
-        if(tempObject.name.length>0){
+        if(req.body[i].name.length>0){
             try {
                 const data = await client.db("aps-database").collection("searchHistory").findOne({name: req.body[i].itemDescription});
 
@@ -277,7 +277,7 @@ app.post('/addSearchHistory', async(req, res)=>{
             }
         }
     }
-    
+
     try {
         const result = await client.db("aps-database").collection("searchHistory").insertMany(data);
         res.sendStatus(200);
