@@ -260,9 +260,9 @@ app.post('/addSearchHistory', async(req, res)=>{
     for(let i=0;i<req.body.length;i++){
         if(req.body[i].name.length>0){
             try {
-                const data = await client.db("aps-database").collection("searchHistory").findOne({name: req.body[i].itemDescription});
+                const exists = await client.db("aps-database").collection("searchHistory").findOne({name: req.body[i].itemDescription});
 
-                if(data){
+                if(exists){
                     console.log("Item exists", req.body[i].itemDescription);
                 }
                 else{
