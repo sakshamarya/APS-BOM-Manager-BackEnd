@@ -265,7 +265,19 @@ app.post('/addSearchHistory', (req, res)=>{
             }
 
             if(tempObject.name.length>0){
-                data.push(tempObject);
+                client.db("aps-database").collection("searchHistory").findOne({ name: tempObject.name }, function(error, result) {
+                    if (!error) {
+                        if (result) {
+                            console.log("Item exists");
+                        } else {
+                            console.log("Item not exists");
+                            data.push(tempObject);
+                        }
+                    } else {
+                        console.log("MongoDB error");
+                    }
+                });
+                
             }
             
         }
