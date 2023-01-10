@@ -254,7 +254,7 @@ app.post('/addPO', (req, res)=>{
     }
 })
 
-app.post('/addSearchHistory', (req, res)=>{
+app.post('/addSearchHistory', async(req, res)=>{
     try {
 
         let data=[];
@@ -264,20 +264,21 @@ app.post('/addSearchHistory', (req, res)=>{
                 bom: req.body[i].bom
             }
 
+
             if(tempObject.name.length>0){
-                client.db("aps-database").collection("searchHistory").findOne({ name: tempObject.name }, function(error, result) {
-                    if (!error) {
-                        if (result) {
-                            console.log("Item exists");
-                        } else {
-                            console.log("Item not exists");
-                            data.push(tempObject);
-                        }
-                    } else {
-                        console.log("MongoDB error");
+                try {
+                    const data = await client.db("aps-database").collection("searchHistory").findOne({name: tempObject.name});
+    
+                    if(data){
+                        console.log("Item exists");
                     }
-                });
-                
+                    else{
+                        console.log("Item not exists");
+                        data.push(tempObject);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
             }
             
         }
