@@ -347,6 +347,7 @@ app.get('/getSearchHistory', async(req, res)=>{
 app.get('/getInventory', async(req, res)=>{
     try {
         const inventoryArray = await client.db("aps-database").collection("inventory").find().sort({name: 1}).toArray();
+        console.log(inventoryArray);
         res.send(inventoryArray);
     } catch (error) {
         res.send(error);
