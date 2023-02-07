@@ -250,24 +250,24 @@ function compare(object1, object2){
     let yy2=object2.date.substring(6,4);
 
     if(yy1>yy2){
-        return 1;
+        return -1;
     }
     else if(yy1<yy2){
-        return -1;
+        return 1;
     }
     else{
         if(mm1>mm2){
-            return 1;
+            return -1;
         }
         else if(mm1<mm2){
-            return -1;
+            return 1;
         }
         else{
             if(dd1>dd2){
-                return 1;
+                return -1;
             }
             else if(dd1<dd2){
-                return -1;
+                return 1;
             }
             return 0;
         }
