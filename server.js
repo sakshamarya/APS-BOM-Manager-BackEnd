@@ -241,6 +241,39 @@ async function mongodbConnect(){
 } 
 mongodbConnect();
 
+function compare(object1, object2){
+    let dd1=object1.substring(0,2);
+    let dd2=object2.substring(0,2);
+    let mm1=object1.substring(3,2);
+    let mm2=object2.substring(3,2);
+    let yy1=object1.substring(6,4);
+    let yy2=object2.substring(6,4);
+
+    if(yy1>yy2){
+        return 1;
+    }
+    else if(yy1<yy2){
+        return -1;
+    }
+    else{
+        if(mm1>mm2){
+            return 1;
+        }
+        else if(mm1<mm2){
+            return -1;
+        }
+        else{
+            if(dd1>dd2){
+                return 1;
+            }
+            else if(dd1<dd2){
+                return -1;
+            }
+            return 0;
+        }
+    }
+}
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -339,6 +372,7 @@ app.post('/addToInventory', async (req, res)=>{
 app.get('/getPendingPO', async(req, res)=>{
     try {
         const PO = await client.db("aps-database").collection("purchaseOrder").find().toArray();
+        PO.sort(compare);
         res.send(PO);
     } catch (error) {
         res.send(error);
@@ -367,6 +401,7 @@ app.post('/addHistoryPO', (req, res)=>{
 app.get('/getHistory', async(req, res)=>{
     try {
         const history = await client.db("aps-database").collection("history").find().toArray();
+        history.sort(compare);
         res.send(history);
     } catch (error) {
         res.send(error);
