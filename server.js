@@ -343,8 +343,9 @@ app.post('/updateInventory', async (req, res)=>{
 
     for(let i=0;i<req.body.length;i++){
         const id = new mongodb.ObjectId(req.body[i]._id);
+        const name = req.body[i].name;
         try {
-            const result = await client.db('aps-database').collection('inventory').updateOne({_id: id},{
+            const result = await client.db('aps-database').collection('inventory').updateOne({name: name},{
                 $set : {
                     qty: parseInt(req.body[i].qty)
                 }
