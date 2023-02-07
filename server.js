@@ -15,7 +15,21 @@ app.use(
 )
 
 app.use(express.json())
-app.use(cors());
+
+const corsOptions = {
+    origin: '*',
+  
+    methods: [
+      'GET',
+      'POST',
+    ],
+  
+    allowedHeaders: [
+      'Content-Type',
+    ],
+  };
+
+app.use(cors(corsOptions));
 
 // declaring uri variable the locally hosted database
 const uri = "mongodb+srv://"+process.env.MONGODB_USERNAME+":"+process.env.MONGODB_PASSWORD+"@cluster0.8vp7psu.mongodb.net/?retryWrites=true&w=majority";
@@ -360,13 +374,12 @@ app.post('/updateInventory', async (req, res)=>{
 })
 
 app.post('/addToInventory', async (req, res)=>{
-
-    const result = await client.db('aps-database').collection('inventory').insertOne(req.body);
-
+    console.log("Here");
     try {
         const result = await client.db('aps-database').collection('inventory').insertOne(req.body);
         res.sendStatus(200);
     } catch (error) {
+        console.log(error);
         res.send(error);
     }
 })
