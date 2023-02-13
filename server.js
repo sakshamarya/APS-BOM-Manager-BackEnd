@@ -469,18 +469,18 @@ app.get('/getHistory', async(req, res)=>{
 
 app.post('/getPoNumber', async(req, res)=>{
 
-    console.log(req);
+    console.log(req.body[0]);
 
     try {
         const pendingPo = await client.db("aps-database").collection("purchaseOrder").find({
             $and: [
-                { date: req.body },
+                { date: req.body[0] },
                 { orderCategory: "purchase" }
             ]
         }).toArray();
         const history = await client.db("aps-database").collection("history").find({
             $and: [
-                { date: req.body },
+                { date: req.body[0] },
                 { orderCategory: "purchase" }
             ]
         }).toArray();
@@ -492,7 +492,7 @@ app.post('/getPoNumber', async(req, res)=>{
 
         for(let i=0;i<pendingPo.length;i++){
             let sz=pendingPo[i].poNumber;
-            let sz1 = sz-9; // 9 is the size of DDMMYYYY/, so rest will be of number
+            let sz1 = parseInt(sz)-9; // 9 is the size of DDMMYYYY/, so rest will be of number
 
             let numberOfPO = pendingPo[i].poNumber.substring(9, parseInt(sz1));
 
@@ -501,7 +501,7 @@ app.post('/getPoNumber', async(req, res)=>{
 
         for(let i=0;i<history.length;i++){
             let sz=history[i].poNumber;
-            let sz1 = sz-9; // 9 is the size of DDMMYYYY/, so rest will be of number
+            let sz1 = parseInt(sz)-9; // 9 is the size of DDMMYYYY/, so rest will be of number
 
             let numberOfPO = history[i].poNumber.substring(9, parseInt(sz1));
 
