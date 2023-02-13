@@ -470,8 +470,18 @@ app.get('/getHistory', async(req, res)=>{
 app.post('/getPoNumber', async(req, res)=>{
 
     try {
-        const pendingPo = await client.db("aps-database").collection("purchaseOrder").find({date: req.body}).toArray();
-        const history = await client.db("aps-database").collection("history").find({date: req.body}).toArray();
+        const pendingPo = await client.db("aps-database").collection("purchaseOrder").find({
+            $and: [
+                { date: req.body },
+                { orderCategory: "purchase" }
+            ]
+        }).toArray();
+        const history = await client.db("aps-database").collection("history").find({
+            $and: [
+                { date: req.body },
+                { orderCategory: "purchase" }
+            ]
+        }).toArray();
 
         console.log(pendingPo);
         console.log(history);
@@ -508,7 +518,7 @@ app.post('/getPoNumber', async(req, res)=>{
 
         console.log(numberToBeSent);
 
-        res.send(numberToBeSent);
+        res.send(toString(numberToBeSent));
     } catch (error) {
         res.send(error);
     }
