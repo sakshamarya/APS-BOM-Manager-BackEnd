@@ -387,6 +387,16 @@ app.post('/addToInventory', async (req, res)=>{
     }
 })
 
+app.post('/deleteInventoryItem', (req,res)=>{
+    const idToRemove = new mongodb.ObjectId(req.body._id);
+    try {
+        client.db("aps-database").collection("inventory").deleteOne( {_id: idToRemove});;
+        res.sendStatus(200);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.get('/getPendingPO', async(req, res)=>{
     try {
         const PO = await client.db("aps-database").collection("purchaseOrder").find().toArray();
