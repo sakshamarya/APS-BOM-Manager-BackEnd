@@ -344,6 +344,16 @@ app.get('/getSearchHistory', async(req, res)=>{
     }
 })
 
+app.post('/deleteSearchHistoryItem', (req,res)=>{
+    const idToRemove = new mongodb.ObjectId(req.body._id);
+    try {
+        client.db("aps-database").collection("searchHistory").deleteOne( {_id: idToRemove});;
+        res.sendStatus(200);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.get('/getInventory', async(req, res)=>{
     try {
         const inventoryArray = await client.db("aps-database").collection("inventory").find().sort({name: 1}).toArray();
