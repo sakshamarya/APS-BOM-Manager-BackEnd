@@ -467,6 +467,47 @@ app.get('/getHistory', async(req, res)=>{
     }
 })
 
+app.post('/getPoNumber', async(req, res)=>{
+
+    try {
+        const pendingPo = await client.db("aps-database").collection("purchaseOrder").find({date: req.body}).toArray();
+        const history = await client.db("aps-database").collection("history").find({date: req.body}).toArray();
+        
+        let numberArray = [];
+
+        for(let i=0;i<pendingPo.length;i++){
+            let sz=pendingPo[i].poNumber;
+            let sz1 = sz-12; // 12 is the size of DDMMYYYY, so rest will be of number
+
+            let numberOfPO = pendingPo[i].poNumber.substring(12, parseInt(sz1));
+
+            numberArray.push(numberOfPO);
+        }
+
+        for(let i=0;i<history.length;i++){
+            let sz=history[i].poNumber;
+            let sz1 = sz-12; // 12 is the size of DDMMYYYY, so rest will be of number
+
+            let numberOfPO = history[i].poNumber.substring(12, parseInt(sz1));
+
+            numberArray.push(numberOfPO);
+        }
+
+        numberArray.sort();
+
+        let numberToBeSent = 1;
+
+        if(numberArray.length){
+            numberToBeSent = numberArray[numberArray.length-1]+1;
+        }
+
+        res.send(numberToBeSent);
+    } catch (error) {
+        res.send(error);
+    }
+
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
