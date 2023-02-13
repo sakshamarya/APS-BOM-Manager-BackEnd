@@ -494,7 +494,7 @@ app.post('/getPoNumber', async(req, res)=>{
 
             let numberOfPO = pendingPo[i].poNumber.substring(9, parseInt(sz1));
 
-            numberArray.push(numberOfPO);
+            numberArray.push(parseInt(numberOfPO));
         }
 
         for(let i=0;i<history.length;i++){
@@ -503,7 +503,7 @@ app.post('/getPoNumber', async(req, res)=>{
 
             let numberOfPO = history[i].poNumber.substring(9, parseInt(sz1));
 
-            numberArray.push(numberOfPO);
+            numberArray.push(parseInt(numberOfPO));
         }
 
         numberArray.sort();
