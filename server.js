@@ -469,6 +469,8 @@ app.get('/getHistory', async(req, res)=>{
 
 app.post('/getPoNumber', async(req, res)=>{
 
+    console.log(req);
+
     try {
         const pendingPo = await client.db("aps-database").collection("purchaseOrder").find({
             $and: [
