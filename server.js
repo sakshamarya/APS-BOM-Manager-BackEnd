@@ -472,6 +472,9 @@ app.post('/getPoNumber', async(req, res)=>{
     try {
         const pendingPo = await client.db("aps-database").collection("purchaseOrder").find({date: req.body}).toArray();
         const history = await client.db("aps-database").collection("history").find({date: req.body}).toArray();
+
+        console.log(pendingPo);
+        console.log(history);
         
         let numberArray = [];
 
@@ -495,11 +498,15 @@ app.post('/getPoNumber', async(req, res)=>{
 
         numberArray.sort();
 
+        console.log(numberArray);
+
         let numberToBeSent = 1;
 
         if(numberArray.length){
             numberToBeSent = numberArray[numberArray.length-1]+1;
         }
+
+        console.log(numberToBeSent);
 
         res.send(numberToBeSent);
     } catch (error) {
