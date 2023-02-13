@@ -360,9 +360,11 @@ app.post('/updateInventory', async (req, res)=>{
         const id = new mongodb.ObjectId(req.body[i]._id);
         const name = req.body[i].name;
         try {
-            const result = await client.db('aps-database').collection('inventory').updateOne({name: name},{
+            const result = await client.db('aps-database').collection('inventory').updateOne({_id: id},{
                 $set : {
-                    qty: parseInt(req.body[i].qty)
+                    name: req.body[i].name,
+                    qty: parseInt(req.body[i].qty),
+                    units: req.body[i].units
                 }
             })
         } catch (error) {
