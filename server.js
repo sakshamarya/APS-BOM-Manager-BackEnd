@@ -516,9 +516,12 @@ app.post('/getPoNumber', async(req, res)=>{
             numberToBeSent = numberArray[numberArray.length-1]+1;
         }
 
-        console.log(numberToBeSent);
+        let arrayToBeSent = [];
+        arrayToBeSent.push(numberToBeSent);
 
-        res.send(toString(numberToBeSent));
+        console.log(arrayToBeSent);
+
+        res.send(arrayToBeSent);
     } catch (error) {
         res.send(error);
     }
