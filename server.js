@@ -335,6 +335,78 @@ app.post('/addSearchHistory', async(req, res)=>{
 
 })
 
+// function to sort an object by key
+
+function sortObject(obj) {
+    return Object.keys(obj).sort().reduce(function (result, key) {
+      result[key] = obj[key];
+      return result;
+    }, {});
+  }
+
+app.post('/addInventoryItemToSearchHistory', async(req, res)=>{
+    try {
+        const history = await client.db("aps-database").collection("searchHistory").find().toArray();
+        console.log(history);
+
+        for(let i=0;i<history.length;i++){
+            // update bom of history[i]
+
+            let newBom = history[i].bom;
+            newBom[req.body.name]=0;
+
+            console.log(newBom);
+
+            newBom = sortObject(newBom);
+
+            console.log("sorted --> ", newBom);
+
+            const result = await client.db('aps-database').collection('searchHistory').updateOne({_id: history[i]._id},{
+                $set : {
+                    bom: newBom
+                }
+            })
+        }
+
+        res.sendStatus(200);
+
+    } catch (error) {
+        res.send(error);
+    }
+})
+
+app.post('/deleteInventoryItemToSearchHistory', async(req, res)=>{
+    try {
+        const history = await client.db("aps-database").collection("searchHistory").find().toArray();
+        console.log(history);
+
+        for(let i=0;i<history.length;i++){
+            // update bom of history[i]
+
+            let newBom = history[i].bom;
+
+            delete newBom[req.body.name];
+
+            console.log(newBom);
+
+            newBom = sortObject(newBom);
+
+            console.log("sorted --> ", newBom);
+
+            const result = await client.db('aps-database').collection('searchHistory').updateOne({_id: history[i]._id},{
+                $set : {
+                    bom: newBom
+                }
+            })
+        }
+
+        res.sendStatus(200);
+
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.get('/getSearchHistory', async(req, res)=>{
     try {
         const history = await client.db("aps-database").collection("searchHistory").find().toArray();
