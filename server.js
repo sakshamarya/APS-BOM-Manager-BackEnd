@@ -355,11 +355,7 @@ app.post('/addInventoryItemToSearchHistory', async(req, res)=>{
             let newBom = history[i].bom;
             newBom[req.body.name]=0;
 
-            console.log(newBom);
-
             newBom = sortObject(newBom);
-
-            console.log("sorted --> ", newBom);
 
             const result = await client.db('aps-database').collection('searchHistory').updateOne({_id: history[i]._id},{
                 $set : {
@@ -387,11 +383,7 @@ app.post('/deleteInventoryItemToSearchHistory', async(req, res)=>{
 
             delete newBom[req.body.name];
 
-            console.log(newBom);
-
             newBom = sortObject(newBom);
-
-            console.log("sorted --> ", newBom);
 
             const result = await client.db('aps-database').collection('searchHistory').updateOne({_id: history[i]._id},{
                 $set : {
@@ -409,7 +401,7 @@ app.post('/deleteInventoryItemToSearchHistory', async(req, res)=>{
 
 app.get('/getSearchHistory', async(req, res)=>{
     try {
-        const history = await client.db("aps-database").collection("searchHistory").find().toArray();
+        const history = await client.db("aps-database").collection("searchHistory").find().sort({name: 1}).toArray();
         res.send(history);
     } catch (error) {
         res.send(error);
