@@ -420,20 +420,18 @@ app.post('/deleteSearchHistoryItem', (req,res)=>{
 
 app.post('/updateSearchHistory', async (req, res)=>{
 
-    for(let i=0;i<req.body.length;i++){
-        const id = new mongodb.ObjectId(req.body[i]._id);
-        const name = req.body[i].name;
-        try {
-            const result = await client.db('aps-database').collection('searchHistory').updateOne({_id: id},{
-                $set : {
-                    name: req.body[i].name,
-                    bom: req.body[i].bom
-                }
-            })
-        } catch (error) {
-            console.log(error);
-            res.send(error);
-        }
+    const id = new mongodb.ObjectId(req.body._id);
+
+    try {
+        const result = await client.db('aps-database').collection('searchHistory').updateOne({_id: id},{
+            $set : {
+                name: req.body.name,
+                bom: req.body.bom
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        res.send(error);
     }
 
     res.sendStatus(200);
