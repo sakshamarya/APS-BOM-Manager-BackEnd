@@ -592,6 +592,30 @@ app.post('/getPoNumber', async(req, res)=>{
 
 })
 
+app.get('/getPassword', async(req, res)=>{
+    try {
+        const password = await client.db("aps-database").collection("password").find().toArray();
+        res.send(password);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
+app.post('/changePassword', async(req, res)=>{
+    console.log(req.body[0]);
+    try {
+        const password = await client.db("aps-database").collection("password").find().toArray();
+        const result = await client.db('aps-database').collection('password').updateOne({_id: password[0]._id},{
+            $set : {
+                password: req.body[0]
+            }
+        })
+        res.sendStatus(200);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
