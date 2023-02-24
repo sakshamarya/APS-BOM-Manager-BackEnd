@@ -3,6 +3,7 @@ var cors = require('cors')
 const {MongoClient, ObjectId} = require('mongodb');
 var mongodb = require('mongodb')
 require("dotenv").config();
+const bcrypt = require('bcryptjs');
 
 const app = express()
 const port = 5000
@@ -592,22 +593,31 @@ app.post('/getPoNumber', async(req, res)=>{
 
 })
 
-app.get('/getPassword', async(req, res)=>{
+app.post('/checkPassword', async(req, res)=>{
     try {
         const password = await client.db("aps-database").collection("password").find().toArray();
-        res.send(password);
+        bcrypt.compare(req.body[0], password[0].password).then((isValid)=> {
+            // res === true
+            console.log(isValid);
+            res.send({status: isValid});
+
+        }).catch((error)=>{
+          console.log(error);
+        });
+
     } catch (error) {
         res.send(error);
     }
 })
 
 app.post('/changePassword', async(req, res)=>{
-    console.log(req.body[0]);
+    const hashValue = await bcrypt.hash(req.body[0], 10);
+
     try {
         const password = await client.db("aps-database").collection("password").find().toArray();
         const result = await client.db('aps-database').collection('password').updateOne({_id: password[0]._id},{
             $set : {
-                password: req.body[0]
+                password: hashValue
             }
         })
         res.sendStatus(200);
