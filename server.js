@@ -419,6 +419,16 @@ app.post('/deleteSearchHistoryItem', (req,res)=>{
     }
 })
 
+app.post('/deleteHistoryItem', (req,res)=>{
+    const idToRemove = new mongodb.ObjectId(req.body._id);
+    try {
+        client.db("aps-database").collection("history").deleteOne( {_id: idToRemove});;
+        res.sendStatus(200);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.post('/updateSearchHistory', async (req, res)=>{
 
     const id = new mongodb.ObjectId(req.body._id);
