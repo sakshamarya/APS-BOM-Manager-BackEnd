@@ -467,7 +467,7 @@ app.post('/updateInventory', async (req, res)=>{
             const result = await client.db('aps-database').collection('inventory').updateOne({_id: id},{
                 $set : {
                     name: req.body[i].name,
-                    qty: parseInt(req.body[i].qty),
+                    qty: parseFloat(req.body[i].qty),
                     units: req.body[i].units
                 }
             })
