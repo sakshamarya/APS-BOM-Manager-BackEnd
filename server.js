@@ -239,6 +239,17 @@ app.get('/getSearchHistory', async(req, res)=>{
     }
 })
 
+app.post('/getSearchHistoryByName', async(req, res)=>{
+    const nameToFind = req.body.name;
+    
+    try {
+        const item = await client.db("aps-database").collection("searchHistory").findOne({name: nameToFind});
+        res.send(item.bom);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.post('/deleteSearchHistoryItem', (req,res)=>{
     const idToRemove = new mongodb.ObjectId(req.body._id);
     try {
