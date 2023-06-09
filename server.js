@@ -325,7 +325,7 @@ app.post('/captureInventory', async (req, res)=>{
             inventory: req.body
         }
         
-        const result = await client.db('aps-database').collection('inventoryHistory').insertOne(data);
+        const result = await client.db('aps-database').collection('inventoryHistory').updateOne({ date: formattedDate }, { $set: data }, { upsert: true });
         res.sendStatus(200);
     } catch (error) {
         console.log(error);
