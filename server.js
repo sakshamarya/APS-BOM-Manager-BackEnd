@@ -318,14 +318,23 @@ app.post('/captureInventory', async (req, res)=>{
         const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
         const year = String(currentDate.getFullYear());
 
-        const formattedDate = `${day}-${month}-${year}`;
+        let hours = currentDate.getHours();
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const amPm = hours >= 12 ? 'PM' : 'AM';
+
+        // Convert to 12-hour format
+        hours = hours % 12;
+        hours = hours || 12; // 0 should be displayed as 12
+
+        const formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes} ${amPm}`;
+
 
         let data={
-            date: formattedDate,
+            date: formattedDateTime,
             inventory: req.body
         }
         
-        const result = await client.db('aps-database').collection('inventoryHistory').updateOne({ date: formattedDate }, { $set: data }, { upsert: true });
+        const result = await client.db('aps-database').collection('inventoryHistory').insertOne(data);
         res.sendStatus(200);
     } catch (error) {
         console.log(error);
@@ -333,10 +342,16 @@ app.post('/captureInventory', async (req, res)=>{
     }
 })
 
+function compareDatesWithTime(a, b) {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA; // Sort in descending order
+}
+
 app.get('/getInventoryHistory', async(req, res)=>{
     try {
         const inventoryArray = await client.db("aps-database").collection("inventoryHistory").find().sort().toArray();
-        inventoryArray.sort(compareDate);
+        inventoryArray.sort(compareDatesWithTime);
         res.send(inventoryArray);
     } catch (error) {
         res.send(error);
