@@ -323,8 +323,7 @@ app.post('/captureInventory', async (req, res)=>{
         const amPm = hours >= 12 ? 'PM' : 'AM';
 
         // Convert to 12-hour format
-        hours = hours % 12;
-        hours = hours || 12; // 0 should be displayed as 12
+        hours = hours % 12 || 12; // Adjust for 0 (midnight)
 
         const formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes} ${amPm}`;
 
