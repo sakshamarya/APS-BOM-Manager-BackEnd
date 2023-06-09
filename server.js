@@ -333,6 +333,16 @@ app.post('/captureInventory', async (req, res)=>{
     }
 })
 
+app.get('/getInventoryHistory', async(req, res)=>{
+    try {
+        const inventoryArray = await client.db("aps-database").collection("inventoryHistory").find().sort().toArray();
+        inventoryArray.sort(compareDate);
+        res.send(inventoryArray);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 app.post('/addToInventory', async (req, res)=>{
     try {
         const result = await client.db('aps-database').collection('inventory').insertOne(req.body);
