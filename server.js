@@ -310,8 +310,30 @@ app.post('/updateInventory', async (req, res)=>{
     res.sendStatus(200);
 })
 
+app.post('/captureInventory', async (req, res)=>{
+    try {
+        const currentDate = new Date();
+
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = String(currentDate.getFullYear());
+
+        const formattedDate = `${day}-${month}-${year}`;
+
+        let data={
+            date: formattedDate,
+            inventory: req.body
+        }
+        
+        const result = await client.db('aps-database').collection('inventoryHistory').insertOne(data);
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+})
+
 app.post('/addToInventory', async (req, res)=>{
-    console.log("Here");
     try {
         const result = await client.db('aps-database').collection('inventory').insertOne(req.body);
         res.sendStatus(200);
