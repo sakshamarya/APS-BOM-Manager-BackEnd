@@ -318,20 +318,10 @@ app.post('/captureInventory', async (req, res)=>{
         const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
         const year = String(currentDate.getFullYear());
 
-        let hours = currentDate.getHours();
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        const amPm = hours >= 12 ? 'PM' : 'AM';
-
-        // Convert to 12-hour format
-        hours = hours % 12;
-        hours = hours === 0 ? 12 : hours; // Adjust for 0 (midnight)
-
-        const formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes} ${amPm}`;
-
-
+        const formattedDate = `${day}-${month}-${year}`;
 
         let data={
-            date: formattedDateTime,
+            date: formattedDate,
             inventory: req.body
         }
         
